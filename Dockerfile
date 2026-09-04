@@ -11,7 +11,7 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT
 RUN useradd -m booking-ms
 
 # Copy your JAR file into the webapps directory
-COPY ./target/booking-ms*.jar /usr/local/tomcat/webapps/
+COPY ./target/devops_revise*.jar /usr/local/tomcat/webapps/
 
 # Expose the default Tomcat port
 EXPOSE 8080
