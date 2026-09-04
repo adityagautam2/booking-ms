@@ -114,7 +114,7 @@ stage('Push Docker Image to Amazon ECR') {
                 sh '''
                     echo "Logging into Amazon ECR..."
 
-                    aws ecr get-login-password --region ap-south-1 | \
+                    aws ecr get-login-password --region us-east-1 | \
                     docker login --username AWS --password-stdin \
                     846797579443.dkr.ecr.us-east-1.amazonaws.com
 
