@@ -102,29 +102,38 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to Amazon ECR') {
-            steps {
-                script {
-                    echo 'Tagging and Pushing Docker Image to ECR...'
+stage('Push Docker Image to Amazon ECR') {
+    steps {
+        script {
+            echo 'Tagging and Pushing Docker Image to ECR...'
 
-                    sh '''
-                        echo "Logging into Amazon ECR..."
+            withCredentials([
+                [$class: 'AmazonWebServicesCredentialsBinding',
+                 credentialsId: 'pushecr']
+            ]) {
+                sh '''
+                    echo "Logging into Amazon ECR..."
 
-                        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 846797579443.dkr.ecr.us-east-1.amazonaws.com
+                    aws ecr get-login-password --region ap-south-1 | \
+                    docker login --username AWS --password-stdin \
+                    846797579443.dkr.ecr.us-east-1.amazonaws.com
 
-                        echo "Tagging Docker Image..."
+                    echo "Tagging Docker Image..."
 
-                        docker tag adgaut21/booking-ms:latest 846797579443.dkr.ecr.us-east-1.amazonaws.com/adgaut21/booking-ms:latest
+                    docker tag adgaut21/booking-ms:latest \
+                    846797579443.dkr.ecr.us-east-1.amazonaws.com/adgaut21/booking-ms:latest
 
-                        echo "Pushing Docker Image to ECR..."
+                    echo "Pushing Docker Image to ECR..."
 
-                        docker push 846797579443.dkr.ecr.us-east-1.amazonaws.com/adgaut21/booking-ms:latest
-                    '''
-
-                    echo 'Docker Image Pushed to Amazon ECR Successfully!'
-                }
+                    docker push \
+                    846797579443.dkr.ecr.us-east-1.amazonaws.com/adgaut21/booking-ms:latest
+                '''
             }
+
+            echo 'Docker Image Pushed to Amazon ECR Successfully!'
         }
+    }
+}
 
         stage('Cleanup Docker Images') {
             steps {
