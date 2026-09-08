@@ -147,23 +147,33 @@ stage('Push Docker Image to Amazon ECR') {
             }
         }
 
-                stage('Upload Docker Image to Nexus') {
-                    steps {
-                       script {
-                           withCredentials([usernamePassword(credentialsId: 'nexuscreds',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-                              sh 'docker login http://3.82.97.54:8085/repository/booking-ms/ -u admin -p ${PASSWORD}'
-                              echo "push docker image to Nexus : in progress"
-                              sh 'docker tag booking-ms 3.82.97.54:8085/booking-ms/latest'
-                              sh 'docker push 3.82.97.54:8085/booking-ms'
-                              echo 'push docker image to Nexus : completed'
+ stage('Upload Docker Image to Nexus') {
+     steps {
+         script {
+             withCredentials([
+                 usernamePassword(
+                     credentialsId: 'nexuscreds',
+                     usernameVariable: 'USERNAME',
+                     passwordVariable: 'PASSWORD'
+                 )
+             ]) {
+                 sh '''
+                     echo "$PASSWORD" | docker login 3.82.97.54:8085 \
+                         -u "$USERNAME" \
+                         --password-stdin
 
+                     echo "Push Docker image to Nexus : in progress"
 
-                    }
-                }
+                     docker tag booking-ms:latest 3.82.97.54:8085/booking-ms:latest
 
-                      }
+                     docker push 3.82.97.54:8085/booking-ms:latest
 
-                          }
+                     echo "Push Docker image to Nexus : completed"
+                 '''
+             }
+         }
+     }
+ }
     }
 }
 
