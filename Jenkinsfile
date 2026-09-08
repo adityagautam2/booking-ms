@@ -146,6 +146,24 @@ stage('Push Docker Image to Amazon ECR') {
                 echo 'Local Docker images deleted successfully!'
             }
         }
+
+                stage('Upload Docker Image to Nexus') {
+                    steps {
+                       script {
+                           withCredentials([usernamePassword(credentialsId: 'nexuscreds',usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+                              sh 'docker login http://3.82.97.54:8085/repository/booking-ms/ -u admin -p ${PASSWORD}'
+                              echo "push docker image to Nexus : in progress"
+                              sh 'docker tag booking-ms 3.82.97.54:8085/booking-ms/latest'
+                              sh 'docker push 3.82.97.54:8085/booking-ms'
+                              echo 'push docker image to Nexus : completed'
+
+
+                    }
+                }
+
+                      }
+
+                          }
     }
 }
 
