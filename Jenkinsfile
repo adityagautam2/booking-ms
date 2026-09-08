@@ -164,7 +164,8 @@ stage('Push Docker Image to Amazon ECR') {
 
                      echo "Push Docker image to Nexus : in progress"
 
-                     docker tag booking-ms:latest 3.82.97.54:8085/booking-ms:latest
+                     docker tag adgaut21/booking-ms:latest \
+                         3.82.97.54:8085/booking-ms:latest
 
                      docker push 3.82.97.54:8085/booking-ms:latest
 
