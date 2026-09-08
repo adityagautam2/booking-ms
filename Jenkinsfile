@@ -135,19 +135,7 @@ stage('Push Docker Image to Amazon ECR') {
     }
 }
 
-        stage('Cleanup Docker Images') {
-            steps {
-                echo 'Cleaning up local Docker images...'
-
-                sh '''
-                    docker rmi -f $(docker images -aq) || true
-                '''
-
-                echo 'Local Docker images deleted successfully!'
-            }
-        }
-
- stage('Upload Docker Image to Nexus') {
+stage('Upload Docker Image to Nexus') {
      steps {
          script {
              withCredentials([
@@ -175,6 +163,20 @@ stage('Push Docker Image to Amazon ECR') {
          }
      }
  }
+
+        stage('Cleanup Docker Images') {
+            steps {
+                echo 'Cleaning up local Docker images...'
+
+                sh '''
+                    docker rmi -f $(docker images -aq) || true
+                '''
+
+                echo 'Local Docker images deleted successfully!'
+            }
+        }
+
+
     }
 }
 
