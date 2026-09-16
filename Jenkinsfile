@@ -43,7 +43,7 @@ pipeline {
             steps {
             echo 'Starting sonarqube code quality scan...'
             withSonarQubeEnv('sonar-server') {
-                 sh 'mvn sonar:sonar'
+                 sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
             }
             echo 'Sonarqube scan completed. Checking quality gate...'
             timeout(time: 10, unit: 'MINUTES') {
