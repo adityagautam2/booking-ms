@@ -36,6 +36,24 @@ pipeline {
             }
         }
 
+        stage('Sonarqube code Quality') {
+            environment{
+               scannerHome = tool 'qube'
+            }
+            steps {
+            echo 'Starting sonarqube code quality scan...'
+            withSonarQubeEnv('sonar-server') {
+                 sh 'mvn sonar:sonar'
+            }
+            echo 'Sonarqube scan completed. Checking quality gate...'
+            timeout(time: 10, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
+            echo 'Quality Gate check completed!'
+
+            }
+
+        }
         stage('Code Package') {
             steps {
                 echo 'Creating Artifact'
